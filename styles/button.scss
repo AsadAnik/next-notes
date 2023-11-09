@@ -1,0 +1,15 @@
+button[type="submit"] {
+    border: 1px solid skyblue;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    background-color: royalblue;
+    color: white;
+    cursor: pointer;
+    transition: 1s;
+    width: 100%;
+
+    &:hover {
+        background-color: skyblue;
+        color: black;
+    }
+}
