@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 const Page = (): React.ReactElement => {
     const router = useRouter();
     const [blogs, setBlogs] = useState<[]>([]);
+    const [deleting, setDeleting] = useState<boolean>(false);
 
     /**
      * ---- Fetching Blogs -----
@@ -27,10 +28,31 @@ const Page = (): React.ReactElement => {
 
     useEffect(() => {
         fetchBlogs();
-    }, []);
+    }, [deleting]);
 
-    const handleDelete = () => {
+    /**
+     * ---- Delete Blog ----
+     * @param id 
+     */
+    const handleDelete = async(id: string) => {
+        setDeleting(true);
 
+        const deleteConfirm: boolean = confirm("Are you sure wants to delete?");
+
+        if (!deleteConfirm) {
+            setDeleting(false);
+            return false;
+        }
+
+        if (deleteConfirm) {
+            const response = await Axios.delete(`/api/blogs/${id}`);
+            const data = response?.data;
+    
+            if (data.success) {
+                router.push('/');
+                setDeleting(false);
+            }
+        }
     };
 
     /**
@@ -49,7 +71,7 @@ const Page = (): React.ReactElement => {
                                 <FiEdit />
                             </span>
 
-                            <span onClick={handleDelete}>
+                            <span onClick={() => handleDelete(String(blog?._id))}>
                                 <AiFillDelete />
                             </span>
                         </div>
