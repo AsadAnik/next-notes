@@ -1,0 +1,37 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: next-crud
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    environment:
+      - DATABASE_URI=mongodb://mongo:27017/next-crud
+    networks:
+      - next-crud-network
+    command: "npm run dev"
+    volumes:
+      - "./:/usr/src/app"
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    restart: always
+    links:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    container_name: my-mongo
+    ports:
+      - 27017:27017
+    networks:
+      - next-crud-network
+    restart: always
+    volumes:
+      - /usr/local/var/mongodb:/data/db
+
+networks:
+  next-crud-network:
